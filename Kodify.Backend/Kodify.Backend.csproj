@@ -5,7 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	  <PackageId>Kodify.Backend</PackageId>
-    <Version>0.0.2</Version>
+    <Description>Kodify's Backend.</Description>
+    <Version>0.0.3</Version>
     <Authors>mhrstv</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
