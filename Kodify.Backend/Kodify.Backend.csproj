@@ -9,6 +9,7 @@
     <Version>0.0.4</Version>
     <Authors>mhrstv</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <PackageProjectUrl>https://github.com/mhrstv/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mhrstv/kodify.backend</RepositoryUrl>
@@ -23,4 +24,7 @@
     <PackageReference Include="OpenAI" Version="2.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 </Project>
