@@ -72,4 +72,52 @@ public class OpenAIService : IOpenAIService
             Language = language
         };
     }
+
+    public async IAsyncEnumerable<GeneratedProblem> GenerateProblemsAsync(
+        string keywords,
+        string difficulty,
+        string culture,
+        int? examplesCount = null,
+        int problemCount = 3)
+    {
+        var previousProblems = new List<string>();
+
+        for (int i = 0; i < problemCount; i++)
+        {
+            var problem = await GenerateSingleProblem(
+                keywords,
+                difficulty,
+                culture,
+                examplesCount,
+                previousProblems);
+
+            previousProblems.Add(problem.Description);
+            yield return problem;
+        }
+    }
+
+    private async Task<GeneratedProblem> GenerateSingleProblem(
+        string keywords,
+        string difficulty,
+        string culture,
+        int? examplesCount,
+        List<string> previousProblems)
+    {
+        var prompt = PromptTemplates.GetProblemGenerationPrompt(
+            keywords,
+            difficulty,
+            examplesCount,
+            culture,
+            previousProblems);
+
+        ChatCompletion completion = await _client.CompleteChatAsync(prompt);
+        var description = completion.Content[0].Text;
+
+        return new GeneratedProblem
+        {
+            Description = description,
+            Keywords = keywords,
+            Difficulty = difficulty
+        };
+    }
 } 

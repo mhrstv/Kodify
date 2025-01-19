@@ -36,4 +36,36 @@ public static class PromptTemplates
         $"Example input: {input}\nExample output: {output}\n" +
         "Based on the overall difficulty, send me the accurate percentage of how likely it is the code will work perfectly the first time. " +
         "Format your answer as: \"00%\". Do NOT send anything else except that.";
+
+    public static string GetProblemGenerationPrompt(
+        string keywords, 
+        string difficulty, 
+        int? examplesCount, 
+        string culture,
+        List<string> previousProblems = null)
+    {
+        var prompt = $"Generate me a programming problem matching these keywords: {keywords}.\n" +
+            $"The difficulty of the problem should be {difficulty}. As a difficulty example use the problems from websites such as LeetCode, HackerRank, CodeWars, etc.\n";
+
+        if (previousProblems?.Any() == true)
+        {
+            prompt += "It should be COMPLETELY different from these ones you already generated:\n" +
+                     string.Join("\nAND\n", previousProblems) + "\n" +
+                     "That means the problem should have nothing in common with the previous ones mentioned.\n";
+        }
+
+        prompt += "Give me ONLY and ONLY the problem description.\n" +
+            "Do NOT include anything else except the problem description." +
+            "Do NOT include anything else, no matter what.\n" +
+            "Do NOT include a title or name for the problem and do NOT include text such as 'Problem description:'\n" +
+            "Also, give example input and output to the problem.\n" +
+            "Send it all as plain and properly formatted text and do not send any codeblocks, do not use bolding, do not use italic and anything of that sort.\n" +
+            "Do not send it in a specific language block. It should be universal for all languages (C#, C++, C, Python, Ruby, R, JavaScript, Rust, etc.).\n" +
+            $"It should be in {culture} language. (bg-Bulgarian, en-English, fr-French, es-Spanish)";
+
+        if (examplesCount != null)
+            prompt += $"\nThe number of examples you should provide is: {examplesCount}";
+
+        return prompt;
+    }
 } 
