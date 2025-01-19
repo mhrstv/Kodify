@@ -5,8 +5,10 @@ public static class PromptTemplates
     public static string GetSolutionPrompt(string language, string description, string input, string output, List<string> previousSolutions = null)
     {
         var prompt = $"Write a solution in {language} for this problem: {description}. " +
-            "Give me ONLY and ONLY the code in the given language. " +
-            "Do NOT include any comments. Do not include anything else except the program code.";
+            "Give me only and only the code in the specified language. " +
+            "Do not include any comments, no matter what the rest of the text says before this. " +
+            "Do not include anything else except the program code." +
+            "Do not send it in a code block. Do not misunderstand that as sending it as one line of code.";
 
         if (input != null) prompt += $"\nExample input: {input}";
         if (output != null) prompt += $"\nExample output: {output}";
