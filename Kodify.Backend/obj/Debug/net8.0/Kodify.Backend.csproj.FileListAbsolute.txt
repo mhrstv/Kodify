@@ -1,0 +1,4 @@
+C:\Users\Administrator\source\repos\Kodify.Backend\Kodify.Backend\obj\Debug\net8.0\Kodify.Backend.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\source\repos\Kodify.Backend\Kodify.Backend\obj\Debug\net8.0\Kodify.Backend.AssemblyInfoInputs.cache
+C:\Users\Administrator\source\repos\Kodify.Backend\Kodify.Backend\obj\Debug\net8.0\Kodify.Backend.AssemblyInfo.cs
+C:\Users\Administrator\source\repos\Kodify.Backend\Kodify.Backend\obj\Debug\net8.0\Kodify.Backend.csproj.CoreCompileInputs.cache

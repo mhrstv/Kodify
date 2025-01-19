@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <PackageId>Kodify.Backend</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>mhrstv</Authors>
+    <PackageLicenseExpression></PackageLicenseExpression>
+
+    <PackageProjectUrl>https://github.com/mhrstv/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mhrstv/kodify-backend</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="AI\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenAI" Version="2.1.0" />
+  </ItemGroup>
+
+</Project>
