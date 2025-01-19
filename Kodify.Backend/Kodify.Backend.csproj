@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 	  <PackageId>Kodify.Backend</PackageId>
     <Description>Kodify's Backend.</Description>
-    <Version>0.0.3</Version>
+    <Version>0.0.4</Version>
     <Authors>mhrstv</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
