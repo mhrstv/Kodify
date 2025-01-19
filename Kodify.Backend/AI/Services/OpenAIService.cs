@@ -15,33 +15,30 @@ public class OpenAIService : IOpenAIService
         _model = config.Model;
     }
 
-    public async Task<List<CodeSolution>> GenerateSolutions(
-        string description, 
-        string input, 
-        string output, 
+    public async IAsyncEnumerable<CodeSolution> GenerateSolutionsAsync(
+        string description,
+        string input,
+        string output,
         string language,
         string culture,
         int solutionCount = 3)
     {
-        var solutions = new List<CodeSolution>();
         var previousCodes = new List<string>();
         var languageId = LanguageMapping.GetLanguageIdentifier(language);
 
         for (int i = 0; i < solutionCount; i++)
         {
             var solution = await GenerateSingleSolution(
-                description, 
-                input, 
-                output, 
+                description,
+                input,
+                output,
                 language,
                 culture,
                 previousCodes);
 
-            solutions.Add(solution);
             previousCodes.Add(solution.Code);
+            yield return solution;
         }
-
-        return solutions;
     }
 
     private async Task<CodeSolution> GenerateSingleSolution(
