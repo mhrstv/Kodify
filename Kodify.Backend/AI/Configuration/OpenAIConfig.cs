@@ -5,7 +5,7 @@ public class OpenAIConfig
     public string ApiKey { get; set; }
     public string Model { get; set; } = "gpt-4o-mini";
     
-    // You might want to load this from configuration/settings later
+    // You need to call this with a proper OpenAI API key
     public static OpenAIConfig Default => new()
     {
         ApiKey = "api-key",
