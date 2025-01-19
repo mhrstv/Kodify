@@ -7,10 +7,10 @@
 	  <PackageId>Kodify.Backend</PackageId>
     <Version>0.0.1</Version>
     <Authors>mhrstv</Authors>
-    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
     <PackageProjectUrl>https://github.com/mhrstv/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/mhrstv/kodify-backend</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mhrstv/kodify.backend</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
