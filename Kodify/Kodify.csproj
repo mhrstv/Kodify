@@ -4,15 +4,14 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	  <PackageId>Kodify.Backend</PackageId>
-    <Description>Kodify's Backend.</Description>
+	  <PackageId>Kodify</PackageId>
     <Version>0.0.4</Version>
     <Authors>mhrstv</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <PackageProjectUrl>https://github.com/mhrstv/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/mhrstv/kodify.backend</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mhrstv/kodify</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
