@@ -1,6 +1,6 @@
-# Kodify.Backend
+# Kodify
 
-Kodify.Backend is a .NET library that provides AI-powered code generation, problem generation, and code explanation capabilities.
+Kodify is a .NET library that provides AI-powered code generation, problem generation, and code explanation capabilities.
 
 ## Key Features
 
