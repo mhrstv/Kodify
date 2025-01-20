@@ -1,6 +1,6 @@
 namespace Kodify.AI.Configuration;
 
-public class OpenAIConfig
+public class OpenAIConfig : IAIConfig
 {
     public string ApiKey { get; set; }
     public string Model { get; set; } = "gpt-4o-mini";
