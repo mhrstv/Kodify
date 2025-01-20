@@ -19,11 +19,11 @@ You can install the package via NuGet:
 
 
 ```shell
-dotnet add package Kodify.Backend
+dotnet add package Kodify
 ```
 ## Configuration
 
-To use Kodify.Backend, you need to configure the OpenAI settings:
+To use Kodify, you need to configure the OpenAI settings:
 
 
 ```csharp
@@ -105,4 +105,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
  0.0.4: Current release (latest stable)
 ## Project Links & Dependancy References
 
-- [GitHub Repository](https://github.com/mhrstv/kodify.backend)
+- [GitHub Repository](https://github.com/mhrstv/kodify)
