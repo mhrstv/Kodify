@@ -1,7 +1,7 @@
 using Kodify.AI.Models;
 namespace Kodify.AI.Services;
 
-public interface IOpenAIService
+public interface IAIService
 {
     IAsyncEnumerable<CodeSolution> GenerateSolutionsAsync(
         string description,

@@ -22,6 +22,23 @@ public static class PromptTemplates
         return prompt;
     }
 
+    public static string GetSolutionPrompt(string language, string description, List<string> previousSolutions = null)
+    {
+        var prompt = $"Write a solution in {language} for this problem: {description}. " +
+            "Give me only and only the code in the specified language. " +
+            "Do not include any comments, no matter what the rest of the text says before this. " +
+            "Do not include anything else except the program code." +
+            "Do not send it in a code block. Do not misunderstand that as sending it as one line of code.";
+        
+        if (previousSolutions?.Any() == true)
+        {
+            prompt += "\nThe solution should be different from:\n" + 
+                     string.Join("\nAnd:\n", previousSolutions);
+        }
+
+        return prompt;
+    }
+
     public static string GetExplanationPrompt(string code, string culture) =>
         $"Explain the code:\n{code}\n" +
         "Send the explanation in steps. " +
@@ -34,6 +51,12 @@ public static class PromptTemplates
         $"Do a deep analysis on the solution I will send down below, but do not send anything regarding to your analysis.\n" +
         $"The problem is a solution to this problem:\n{problemDesc}\n" +
         $"Example input: {input}\nExample output: {output}\n" +
+        "Based on the overall difficulty, send me the accurate percentage of how likely it is the code will work perfectly the first time. " +
+        "Format your answer as: \"00%\". Do NOT send anything else except that.";
+
+     public static string GetAnalysisPrompt(string problemDesc, string solution) =>
+        $"Do a deep analysis on the solution I will send down below, but do not send anything regarding to your analysis.\n" +
+        $"The problem is a solution to this problem:\n{problemDesc}\n" +
         "Based on the overall difficulty, send me the accurate percentage of how likely it is the code will work perfectly the first time. " +
         "Format your answer as: \"00%\". Do NOT send anything else except that.";
 
@@ -67,5 +90,15 @@ public static class PromptTemplates
             prompt += $"\nThe number of examples you should provide is: {examplesCount}";
 
         return prompt;
+    }
+
+    public static string GetDocumentationPrompt(string projectName, string projectSummary, string usageInstructions, string code)
+    {
+        return $"Generate detailed documentation for the following project:\n" +
+               $"**Project Name:** {projectName}\n" +
+               $"**Project Summary:** {projectSummary}\n" +
+               $"**Usage Instructions:** {usageInstructions}\n\n" +
+               $"**Code:**\n{code}\n\n" +
+               "Please provide a comprehensive documentation including sections for installation, usage, examples, and API reference.";
     }
 } 
