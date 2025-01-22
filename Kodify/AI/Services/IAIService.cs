@@ -17,4 +17,6 @@ public interface IAIService
         string culture,
         int? examplesCount = null,
         int problemCount = 3);
+
+    Task<string> GenerateDocumentationAsync(string projectName, string projectSummary, string usageInstructions, string code);
 } 
