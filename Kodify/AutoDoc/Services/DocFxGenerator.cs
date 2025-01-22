@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace AutoDoc.Services
+namespace Kodify.AutoDoc.Services
 {
     public class DocFxGenerator
     {

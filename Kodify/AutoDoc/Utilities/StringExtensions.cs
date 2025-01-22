@@ -1,4 +1,4 @@
-namespace AutoDoc.Utilities
+namespace Kodify.AutoDoc.Utilities
 {
     public static class StringExtensions
     {

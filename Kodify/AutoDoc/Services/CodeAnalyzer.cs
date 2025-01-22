@@ -3,9 +3,9 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.IO;
-using AutoDoc.Models;
+using Kodify.AutoDoc.Models;
 
-namespace AutoDoc.Services
+namespace Kodify.AutoDoc.Services
 {
     public class CodeAnalyzer
     {
