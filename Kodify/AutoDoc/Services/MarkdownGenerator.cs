@@ -316,7 +316,6 @@ namespace Kodify.AutoDoc.Services
                 using (var writer = new StreamWriter(outputPath))
                 {
                     writer.WriteLine("# Changelog");
-                    writer.WriteLine("\nAll notable changes to this project will be documented in this file.\n");
 
                     var repoPath = Repository.Discover(Environment.CurrentDirectory);
                     if (repoPath == null)
