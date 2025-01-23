@@ -101,4 +101,30 @@ public static class PromptTemplates
                $"**Code:**\n{code}\n\n" +
                "Please provide a comprehensive documentation including sections for installation, usage, examples, and API reference.";
     }
+
+    public static string GetDocumentationEnhancementPrompt(string template, List<string> sections)
+    {
+        return $@"
+        ENHANCE THIS DOCUMENTATION USING THE FOLLOWING TEMPLATE:
+        {template}
+
+        EXISTING CONTENT SECTIONS:
+        {string.Join("\n", sections)}
+
+        INSTRUCTIONS:
+        1. Merge template structure with existing content
+        2. Maintain all technical details from existing content
+        3. Improve language and professionalism
+        4. Add missing standard sections from template
+        5. Ensure markdown formatting is valid
+        6. Add appropriate emojis where suitable
+        7. Keep technical accuracy as highest priority
+
+        OUTPUT REQUIREMENTS:
+        - Valid markdown format
+        - No code blocks unless for actual code examples
+        - Section headers must match template hierarchy
+        - Final output must be production-ready
+    ";
+    }
 } 
