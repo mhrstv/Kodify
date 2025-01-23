@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 	  <PackageId>Kodify</PackageId>
     <Description>A .NET library that provides AI-powered code generation, problem generation, and code explanation capabilities.</Description>
-    <Version>0.0.8</Version>
+    <Version>0.0.10</Version>
     <Authors>mhrstv</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -15,11 +15,6 @@
     <RepositoryUrl>https://github.com/mhrstv/Kodify</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="AI\" />
-    <Folder Include="AutoDoc\" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" Version="0.31.0" />
