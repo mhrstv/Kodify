@@ -173,12 +173,44 @@ public class OpenAIService : IAIService
         };
     }
 
-    public async Task<string> GenerateDocumentationAsync(string projectName, string projectSummary, string usageInstructions, string code)
+    public async Task<string> GenerateDocumentationAsync(
+    string projectName,
+    string projectSummary,
+    string usageInstructions,
+    string code)
     {
-        var prompt = PromptTemplates.GetDocumentationPrompt(projectName, projectSummary, usageInstructions, code);
+        var prompt = PromptTemplates.GetDocumentationPrompt(
+            projectName,
+            projectSummary,
+            usageInstructions,
+            code
+        );
 
-        // Call the AI service to generate documentation
         ChatCompletion completion = await _client.CompleteChatAsync(prompt);
-        return completion.Content[0].Text; // Assuming the first content is the desired output
+        return completion.Content[0].Text;
+    }
+
+    public async Task<string> EnhanceDocumentationAsync(string template, List<string> readmeSections)
+    {
+        try
+        {
+            var prompt = PromptTemplates.GetDocumentationEnhancementPrompt(template, readmeSections);
+            ChatCompletion completion = await _client.CompleteChatAsync(prompt);
+            return ProcessEnhancedDocumentation(completion.Content[0].Text);
+        }
+        catch (Exception ex)
+        {
+            // Fallback to original content
+            return string.Join("\n", readmeSections);
+        }
+    }
+
+    private string ProcessEnhancedDocumentation(string content)
+    {
+        // Post-processing rules
+        return content
+            .Replace("```markdown", "")
+            .Replace("```", "")
+            .Trim();
     }
 } 

@@ -21,32 +21,111 @@ namespace Kodify.AutoDoc.Services
             _classDiagramGenerator.GenerateClassDiagrams(outputPath);
         }
 
-        public List<DocumentationModel> Analyze(string path)
+        public Kodify.AutoDoc.Models.ProjectInfo Analyze(string path)
         {
-            var documentation = new List<DocumentationModel>();
-            var files = Directory.GetFiles(path, "*.cs", SearchOption.AllDirectories);
-
-            foreach (var file in files)
+            var projectInfo = new Kodify.AutoDoc.Models.ProjectInfo
             {
-                var code = File.ReadAllText(file);
-                var tree = CSharpSyntaxTree.ParseText(code);
-                var root = tree.GetRoot();
+                ProjectPath = path,
+                Structure = AnalyzeProjectStructure(path)
+            };
 
-                var methods = root.DescendantNodes().OfType<MethodDeclarationSyntax>();
-                foreach (var method in methods)
+            // Analyze all files
+            var allFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+
+            foreach (var file in allFiles)
+            {
+                if (file.EndsWith(".cs"))
                 {
-                    var model = new DocumentationModel
+                    projectInfo.SourceFiles.Add(AnalyzeCSharpFile(file));
+                }
+                else
+                {
+                    projectInfo.OtherFiles.Add(new NonCodeFile
                     {
-                        Name = method.Identifier.Text,
-                        Summary = method.GetLeadingTrivia().ToString().Trim(),
-                        Parameters = method.ParameterList.Parameters.ToString(),
-                        ReturnType = method.ReturnType.ToString()
-                    };
-                    documentation.Add(model);
+                        FilePath = file,
+                        FileType = Path.GetExtension(file)
+                    });
                 }
             }
 
-            return documentation;
+            return projectInfo;
+        }
+
+        private CodeFile AnalyzeCSharpFile(string filePath)
+        {
+            var code = File.ReadAllText(filePath);
+            var tree = CSharpSyntaxTree.ParseText(code);
+            var root = tree.GetRoot();
+
+            var codeFile = new CodeFile { FilePath = filePath };
+
+            // Analyze classes
+            var classDeclarations = root.DescendantNodes().OfType<ClassDeclarationSyntax>();
+            foreach (var classDecl in classDeclarations)
+            {
+                var classInfo = new ClassInfo
+                {
+                    Name = classDecl.Identifier.Text,
+                    Summary = GetSummary(classDecl)
+                };
+
+                // Methods
+                classInfo.Methods = classDecl.DescendantNodes()
+                    .OfType<MethodDeclarationSyntax>()
+                    .Select(m => new MethodInfo
+                    {
+                        Name = m.Identifier.Text,
+                        ReturnType = m.ReturnType.ToString(),
+                        Parameters = m.ParameterList.Parameters.Select(p => new ParameterInfo
+                        {
+                            Name = p.Identifier.Text,
+                            Type = p.Type?.ToString() ?? "void"
+                        }).ToList(),
+                        Summary = GetSummary(m)
+                    }).ToList();
+
+                // Properties
+                classInfo.Properties = classDecl.DescendantNodes()
+                    .OfType<PropertyDeclarationSyntax>()
+                    .Select(p => new PropertyInfo
+                    {
+                        Name = p.Identifier.Text,
+                        Type = p.Type.ToString(),
+                        Summary = GetSummary(p)
+                    }).ToList();
+
+                codeFile.Classes.Add(classInfo);
+            }
+
+            return codeFile;
+        }
+
+        private string GetSummary(SyntaxNode node)
+        {
+            return node.GetLeadingTrivia()
+                .Where(t => t.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia) ||
+                            t.IsKind(SyntaxKind.MultiLineDocumentationCommentTrivia))
+                .Select(t => t.ToString())
+                .FirstOrDefault()?
+                .Replace("///", "")
+                .Trim() ?? "No documentation available";
+        }
+
+        private ProjectStructure AnalyzeProjectStructure(string path)
+        {
+            var structure = new ProjectStructure();
+
+            foreach (var dir in Directory.GetDirectories(path, "*", SearchOption.AllDirectories))
+            {
+                structure.Directories.Add(dir);
+            }
+
+            structure.FileTypes = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories)
+                .Select(f => Path.GetExtension(f))
+                .Distinct()
+                .ToList();
+
+            return structure;
         }
     }
 }
