@@ -5,13 +5,14 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	  <PackageId>Kodify</PackageId>
-    <Version>0.0.6</Version>
+    <Description>A .NET library that provides AI-powered code generation, problem generation, and code explanation capabilities.</Description>
+    <Version>0.0.8</Version>
     <Authors>mhrstv</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <PackageProjectUrl>https://github.com/mhrstv/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/mhrstv/kodify</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mhrstv/Kodify</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
@@ -21,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="LibGit2Sharp" Version="0.31.0" />
     <PackageReference Include="Markdig" Version="0.40.0" />
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.12.0" />
     <PackageReference Include="OpenAI" Version="2.1.0" />

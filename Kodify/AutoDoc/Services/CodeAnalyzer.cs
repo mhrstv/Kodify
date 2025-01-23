@@ -9,6 +9,18 @@ namespace Kodify.AutoDoc.Services
 {
     public class CodeAnalyzer
     {
+        private readonly ClassDiagramGenerator _classDiagramGenerator;
+
+        public CodeAnalyzer()
+        {
+            _classDiagramGenerator = new ClassDiagramGenerator();
+        }
+
+        public void GenerateClassDiagrams(string outputPath)
+        {
+            _classDiagramGenerator.GenerateClassDiagrams(outputPath);
+        }
+
         public List<DocumentationModel> Analyze(string path)
         {
             var documentation = new List<DocumentationModel>();

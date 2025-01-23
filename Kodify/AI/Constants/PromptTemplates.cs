@@ -95,8 +95,8 @@ public static class PromptTemplates
     public static string GetDocumentationPrompt(string projectName, string projectSummary, string usageInstructions, string code)
     {
         return $"Generate detailed documentation for the following project:\n" +
-               $"**Project Name:** {projectName}\n" +
-               $"**Project Summary:** {projectSummary}\n" +
+               $"**{projectName}**\n" +
+               $"**Summary:** {projectSummary}\n" +
                $"**Usage Instructions:** {usageInstructions}\n\n" +
                $"**Code:**\n{code}\n\n" +
                "Please provide a comprehensive documentation including sections for installation, usage, examples, and API reference.";
