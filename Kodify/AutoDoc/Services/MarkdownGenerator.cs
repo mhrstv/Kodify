@@ -69,8 +69,8 @@ namespace Kodify.AutoDoc.Services
             var content = new List<string>
             {
                 $"# {projectName}",
-                "![Build Status](https://img.shields.io/badge/build-passing-brightgreen)",
-                "![License](https://img.shields.io/badge/license-MIT-blue)",
+                $"![Build Status](https://img.shields.io/badge/build-passing-brightgreen)",
+                GetLicenseBadge(projectInfo.License),
                 projectSummary,
                 "",
                 "## Table of Contents",
@@ -120,9 +120,9 @@ namespace Kodify.AutoDoc.Services
                 "4. Push to the Branch",
                 "5. Open a Pull Request",
                 "",
-                "## License",
-                "Distributed under the MIT License. See `LICENSE` for more information."
             });
+
+            content.AddRange(GetLicenseSection(projectInfo.License));
 
             return content;
         }
@@ -260,10 +260,51 @@ namespace Kodify.AutoDoc.Services
                 }
                 catch
                 {
-                    // Gracefully handle unreadable files
+                    // Handle unreadable files
                 }
             }
             return string.Join("\n\n", codeContents);
+        }
+
+        private string GetLicenseBadge(LicenseInfo license)
+        {
+            var licenseType = license.Type switch
+            {
+                "MIT" => "MIT",
+                "Apache-2.0" => "Apache%202.0",
+                "GPL-3.0" => "GPL%203.0",
+                "MPL-2.0" => "MPL%202.0",
+                "Unlicense" => "Unlicense",
+                "Custom" => "Custom",
+                _ => "None"
+            };
+
+            return $"![License](https://img.shields.io/badge/license-{licenseType}-blue)";
+        }
+
+        private IEnumerable<string> GetLicenseSection(LicenseInfo license)
+        {
+            var section = new List<string>
+    {
+        "## License"
+    };
+
+            if (license.Type == "None")
+            {
+                section.Add("This project currently does not have a license. " +
+                            "Please contact the maintainers for usage permissions.");
+            }
+            else if (license.Type == "Custom")
+            {
+                section.Add("Custom license - see [LICENSE](LICENSE) file for details.");
+            }
+            else
+            {
+                section.Add($"Distributed under the {license.Type} License. " +
+                           $"See [LICENSE]({Path.GetFileName(license.FilePath)}) for more information.");
+            }
+
+            return section;
         }
 
         public void GenerateChangelog(string outputPath)

@@ -48,6 +48,8 @@ namespace Kodify.AutoDoc.Services
                 }
             }
 
+            projectInfo.License = DetectLicense(path);
+
             return projectInfo;
         }
 
@@ -126,6 +128,48 @@ namespace Kodify.AutoDoc.Services
                 .ToList();
 
             return structure;
+        }
+
+        private LicenseInfo DetectLicense(string projectPath)
+        {
+            var licenseFiles = new[]
+            {
+        "LICENSE",
+        "LICENSE.md",
+        "LICENSE.txt",
+        "COPYING",
+        "COPYING.md",
+        "COPYING.txt"
+    };
+
+            foreach (var file in licenseFiles)
+            {
+                var fullPath = Path.Combine(projectPath, file);
+                if (File.Exists(fullPath))
+                {
+                    return new LicenseInfo
+                    {
+                        FilePath = fullPath,
+                        Content = File.ReadAllText(fullPath),
+                        Type = DetectLicenseType(fullPath)
+                    };
+                }
+            }
+
+            return new LicenseInfo { Type = "None" };
+        }
+
+        private string DetectLicenseType(string filePath)
+        {
+            var content = File.ReadAllText(filePath);
+
+            if (content.Contains("MIT License")) return "MIT";
+            if (content.Contains("Apache License")) return "Apache-2.0";
+            if (content.Contains("GNU GENERAL PUBLIC LICENSE")) return "GPL-3.0";
+            if (content.Contains("Mozilla Public License")) return "MPL-2.0";
+            if (content.Contains("The Unlicense")) return "Unlicense";
+
+            return "Custom";
         }
     }
 }
