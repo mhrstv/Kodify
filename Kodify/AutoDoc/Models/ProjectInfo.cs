@@ -16,6 +16,7 @@ namespace Kodify.AutoDoc.Models
         public List<EnumInfo> Enums { get; set; } = new();
         public ProjectStructure Structure { get; set; } = new();
         public LicenseInfo License { get; set; } = new();
+        public bool HasWebApi { get; set; }
     }
 
     public class CodeFile
@@ -41,14 +42,19 @@ namespace Kodify.AutoDoc.Models
     public class ClassInfo
     {
         public string Name { get; set; }
+        public List<string> BaseTypes { get; set; } = new();
+        public List<string> Attributes { get; set; } = new();
         public List<MethodInfo> Methods { get; set; } = new();
-        public List<PropertyInfo> Properties { get; set; } = new();
         public string Summary { get; set; }
+        public bool IsApiController => BaseTypes.Contains("ControllerBase") ||
+                                      BaseTypes.Contains("ApiController") ||
+                                      Attributes.Contains("ApiController");
     }
 
     public class MethodInfo
     {
         public string Name { get; set; }
+        public List<string> Attributes { get; set; } = new();
         public string ReturnType { get; set; }
         public List<ParameterInfo> Parameters { get; set; } = new();
         public string Summary { get; set; }
