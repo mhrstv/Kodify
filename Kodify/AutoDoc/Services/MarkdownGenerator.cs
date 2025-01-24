@@ -106,9 +106,12 @@ namespace Kodify.AutoDoc.Services
             content.Add("");
 
             // API Reference
-            content.Add("## API Reference");
-            content.AddRange(GenerateApiReference(projectInfo));
-            content.Add("");
+            if (projectInfo.HasWebApi)
+            {
+                content.Add("## API Reference");
+                content.AddRange(GenerateApiReference(projectInfo));
+                content.Add("");
+            }
 
             // Standard sections
             content.AddRange(new[]
@@ -225,28 +228,50 @@ namespace Kodify.AutoDoc.Services
 
             foreach (var file in projectInfo.SourceFiles)
             {
+                var apiControllers = file.Classes
+                    .Where(c => c.IsApiController)
+                    .ToList();
+
+                if (!apiControllers.Any()) continue;
+
                 apiContent.Add($"### {Path.GetFileName(file.FilePath)}");
 
-                foreach (var cls in file.Classes)
+                foreach (var controller in apiControllers)
                 {
-                    apiContent.Add($"#### {cls.Name}");
-                    apiContent.Add(cls.Summary);
+                    apiContent.Add($"#### {controller.Name.Replace("Controller", "")}");
+                    apiContent.Add(controller.Summary);
 
-                    if (cls.Methods.Count > 0)
+                    foreach (var method in controller.Methods)
                     {
-                        apiContent.Add("**Methods:**");
-                        foreach (var method in cls.Methods)
-                        {
-                            var parameters = string.Join(", ",
-                                method.Parameters.Select(p => $"{p.Type} {p.Name}"));
-                            apiContent.Add($"- `{method.ReturnType} {method.Name}({parameters})`");
-                            apiContent.Add($"  {method.Summary}");
-                        }
+                        var httpMethod = DetectHttpMethod(method);
+                        var routeTemplate = DetectRouteTemplate(controller, method);
+
+                        apiContent.Add($"- **{httpMethod}** `{routeTemplate}`");
+                        apiContent.Add($"  {method.Summary}");
                     }
                 }
             }
 
             return apiContent;
+        }
+        private string DetectHttpMethod(MethodInfo method)
+        {
+            var httpMethods = new[] { "HttpGet", "HttpPost", "HttpPut", "HttpDelete", "HttpPatch" };
+            var methodAttribute = method.Attributes.FirstOrDefault(a => httpMethods.Contains(a));
+            return methodAttribute?.Replace("Http", "") ?? "GET"; // Default to GET
+        }
+
+        private string DetectRouteTemplate(ClassInfo controller, MethodInfo method)
+        {
+            var controllerRoute = controller.Attributes
+                .FirstOrDefault(a => a.StartsWith("Route("))?
+                .Split('"').ElementAtOrDefault(1) ?? "";
+
+            var methodRoute = method.Attributes
+                .FirstOrDefault(a => a.StartsWith("Route("))?
+                .Split('"').ElementAtOrDefault(1) ?? "";
+
+            return $"/{controllerRoute.Trim('/')}/{methodRoute.Trim('/')}".Trim('/');
         }
 
         private string GetCodeContent(ProjectInfo projectInfo)

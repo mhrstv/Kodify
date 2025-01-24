@@ -48,11 +48,44 @@ namespace Kodify.AutoDoc.Services
                 }
             }
 
+            projectInfo.HasWebApi = DetectApiControllers(projectInfo.SourceFiles);
             projectInfo.License = DetectLicense(path);
 
             return projectInfo;
         }
+        private bool DetectApiControllers(List<CodeFile> sourceFiles)
+        {
+            foreach (var file in sourceFiles)
+            {
+                var code = File.ReadAllText(file.FilePath);
+                var tree = CSharpSyntaxTree.ParseText(code);
+                var root = tree.GetRoot();
 
+                var classDeclarations = root.DescendantNodes().OfType<ClassDeclarationSyntax>();
+
+                foreach (var classDecl in classDeclarations)
+                {
+                    // Check base types
+                    var baseTypes = classDecl.BaseList?.Types
+                        .Select(t => t.ToString())
+                        .ToList() ?? new List<string>();
+
+                    if (baseTypes.Any(t => t == "ControllerBase" || t == "ApiController"))
+                        return true;
+
+                    // Check for [ApiController] attribute
+                    var attributes = classDecl.AttributeLists
+                        .SelectMany(al => al.Attributes)
+                        .Select(a => a.Name.ToString())
+                        .ToList();
+
+                    if (attributes.Any(a => a == "ApiController"))
+                        return true;
+                }
+            }
+
+            return false;
+        }
         private CodeFile AnalyzeCSharpFile(string filePath)
         {
             var code = File.ReadAllText(filePath);
@@ -61,39 +94,31 @@ namespace Kodify.AutoDoc.Services
 
             var codeFile = new CodeFile { FilePath = filePath };
 
-            // Analyze classes
             var classDeclarations = root.DescendantNodes().OfType<ClassDeclarationSyntax>();
             foreach (var classDecl in classDeclarations)
             {
                 var classInfo = new ClassInfo
                 {
                     Name = classDecl.Identifier.Text,
+                    BaseTypes = classDecl.BaseList?.Types.Select(t => t.ToString()).ToList() ?? new(),
+                    Attributes = classDecl.AttributeLists
+                        .SelectMany(al => al.Attributes)
+                        .Select(a => a.Name.ToString())
+                        .ToList(),
                     Summary = GetSummary(classDecl)
                 };
 
-                // Methods
+                // Analyze methods
                 classInfo.Methods = classDecl.DescendantNodes()
                     .OfType<MethodDeclarationSyntax>()
                     .Select(m => new MethodInfo
                     {
                         Name = m.Identifier.Text,
-                        ReturnType = m.ReturnType.ToString(),
-                        Parameters = m.ParameterList.Parameters.Select(p => new ParameterInfo
-                        {
-                            Name = p.Identifier.Text,
-                            Type = p.Type?.ToString() ?? "void"
-                        }).ToList(),
-                        Summary = GetSummary(m)
-                    }).ToList();
-
-                // Properties
-                classInfo.Properties = classDecl.DescendantNodes()
-                    .OfType<PropertyDeclarationSyntax>()
-                    .Select(p => new PropertyInfo
-                    {
-                        Name = p.Identifier.Text,
-                        Type = p.Type.ToString(),
-                        Summary = GetSummary(p)
+                        Attributes = m.AttributeLists
+                            .SelectMany(al => al.Attributes)
+                            .Select(a => a.Name.ToString())
+                            .ToList(),
+                        // ... other method properties
                     }).ToList();
 
                 codeFile.Classes.Add(classInfo);
