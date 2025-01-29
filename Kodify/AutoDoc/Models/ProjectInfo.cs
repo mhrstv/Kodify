@@ -17,6 +17,8 @@ namespace Kodify.AutoDoc.Models
         public ProjectStructure Structure { get; set; } = new();
         public LicenseInfo License { get; set; } = new();
         public bool HasWebApi { get; set; }
+        public bool HasGitRepository { get; set; }
+        public string RepositoryUrl { get; set; }
     }
 
     public class CodeFile
@@ -46,9 +48,14 @@ namespace Kodify.AutoDoc.Models
         public List<string> Attributes { get; set; } = new();
         public List<MethodInfo> Methods { get; set; } = new();
         public string Summary { get; set; }
-        public bool IsApiController => BaseTypes.Contains("ControllerBase") ||
-                                      BaseTypes.Contains("ApiController") ||
-                                      Attributes.Contains("ApiController");
+
+        public bool IsApiController =>
+            BaseTypes.Any(b => GetLastTypeSegment(b) == "ControllerBase") ||
+            BaseTypes.Any(b => GetLastTypeSegment(b) == "ApiController") ||
+            Attributes.Any(a => GetLastTypeSegment(a) == "ApiController");
+
+        private string GetLastTypeSegment(string typeName)
+            => typeName.Split('.').Last().Split('`').First();
     }
 
     public class MethodInfo
