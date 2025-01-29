@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 	  <PackageId>Kodify</PackageId>
     <Description>A .NET library that provides AI-powered code generation, problem generation, and code explanation capabilities.</Description>
-    <Version>0.0.11</Version>
+    <Version>0.0.23</Version>
     <Authors>mhrstv</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
