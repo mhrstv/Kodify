@@ -1,4 +1,5 @@
 using Kodify.AI.Models;
+using Kodify.AutoDoc.Models;
 namespace Kodify.AI.Services;
 
 public interface IAIService
@@ -18,5 +19,12 @@ public interface IAIService
         int? examplesCount = null,
         int problemCount = 3);
 
-    Task<string> GenerateDocumentationAsync(string projectName, string projectSummary, string usageInstructions, string code);
+    Task<string> GenerateDocumentationAsync(
+       string projectName,
+       string projectSummary,
+       string usageInstructions,
+       string structuredContent,
+       bool hasApi,
+       LicenseInfo license 
+   );
 } 

@@ -1,4 +1,4 @@
-namespace Kodify.AI.Constants;
+﻿namespace Kodify.AI.Constants;
 
 public static class PromptTemplates
 {
@@ -92,14 +92,42 @@ public static class PromptTemplates
         return prompt;
     }
 
-    public static string GetDocumentationPrompt(string projectName, string projectSummary, string usageInstructions, string code)
+    public static string GetDocumentationPrompt(
+    string projectName,
+    string projectSummary,
+    string usageInstructions,
+    string structuredContent,
+    bool hasApi, string licenseType)
     {
-        return $"Generate detailed documentation for the following project:\n" +
-               $"**{projectName}**\n" +
-               $"**Summary:** {projectSummary}\n" +
-               $"**Usage Instructions:** {usageInstructions}\n\n" +
-               $"**Code:**\n{code}\n\n" +
-               "Please provide a comprehensive documentation including sections for installation, usage, examples, and API reference.";
+        return $@"
+        Create a clean, user-focused README for: {projectName}
+        Summary: {projectSummary}
+        Usage: {usageInstructions}
+
+        RULES:
+        1. {(hasApi ? "Include API section" : "Absolutely NO technical metadata")}
+        2. Never mention files or code structure
+        3. Focus on end-user features
+        4. Use simple, engaging language
+
+        LICENSE INSTRUCTIONS:
+        {GetLicenseInstructions(licenseType)}
+
+        SAMPLE STRUCTURE:
+        # [Project Name]
+        [Brief overview]
+        
+        ## Features
+        - [User-facing features]
+        
+        ## Getting Started
+        [Installation/Usage]
+        
+        {(hasApi ? "## API Reference" : "")}
+
+        ## Contributing
+        [Basic guidelines]
+    ";
     }
 
     public static string GetDocumentationEnhancementPrompt(string template, List<string> sections)
@@ -126,5 +154,16 @@ public static class PromptTemplates
         - Section headers must match template hierarchy
         - Final output must be production-ready
     ";
+    }
+
+    private static string GetLicenseInstructions(string licenseType)
+    {
+        return licenseType switch
+        {
+            "MIT" => "Include MIT license section with badge and link",
+            "Apache-2.0" => "Include Apache 2.0 license section",
+            "None" => "Add prominent 'No License' warning section",
+            _ => "Create custom license section"
+        };
     }
 } 

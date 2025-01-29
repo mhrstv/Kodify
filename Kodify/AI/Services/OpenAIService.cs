@@ -3,6 +3,7 @@ using Kodify.AI.Configuration;
 using Kodify.AI.Constants;
 using OpenAI.Chat;
 using System.Threading.Tasks;
+using Kodify.AutoDoc.Models;
 namespace Kodify.AI.Services;
 
 public class OpenAIService : IAIService
@@ -174,21 +175,25 @@ public class OpenAIService : IAIService
     }
 
     public async Task<string> GenerateDocumentationAsync(
-    string projectName,
-    string projectSummary,
-    string usageInstructions,
-    string code)
+        string projectName,
+        string projectSummary,
+        string usageInstructions,
+        string structuredContent,
+        bool hasApi,
+        LicenseInfo license)
     {
         var prompt = PromptTemplates.GetDocumentationPrompt(
             projectName,
             projectSummary,
             usageInstructions,
-            code
+            structuredContent,
+            hasApi,
+            license.Type
         );
 
         ChatCompletion completion = await _client.CompleteChatAsync(prompt);
-        return completion.Content[0].Text;
-    }
+    return completion.Content[0].Text;
+}
 
     public async Task<string> EnhanceDocumentationAsync(string template, List<string> readmeSections)
     {
