@@ -1,8 +1,8 @@
-using Xunit;
+﻿using Xunit;
 
 namespace Kodify.Tests;
 
-public class BasicValidation
+public class SanityChecks
 {
     [Fact]
     public void ShouldAlwaysPass()

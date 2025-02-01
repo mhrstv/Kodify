@@ -30,14 +30,14 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Run tests
-      run: dotnet test --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=TestResults.trx"
+      run: dotnet test Tests/Kodify.Tests.csproj --configuration Release --logger "trx;LogFileName=TestResults.trx"
 
     - name: Publish test results
       if: always()
       uses: dorny/test-reporter@v1
       with:
         name: Test Results
-        path: "**/TestResults/*.trx"
+        path: "TestResults/**/*.trx"
         reporter: dotnet-trx
 
     - name: Upload build artifacts
