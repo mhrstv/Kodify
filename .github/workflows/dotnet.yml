@@ -34,7 +34,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Run tests
-      run: dotnet test Tests/Tests.csproj --configuration Release --logger "trx;LogFileName=TestResults.trx" --results-directory ./TestResults
+      run: dotnet test Kodify.Tests/Tests.csproj --configuration Release --logger "trx;LogFileName=TestResults.trx" --results-directory ./TestResults
 
     - name: Publish test results
       if: ${{ !github.event.pull_request.head.repo.fork }}
