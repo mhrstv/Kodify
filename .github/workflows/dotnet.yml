@@ -1,4 +1,4 @@
-name: Build and Test
+name: Kodify CI/CD
 
 on:
   push:
@@ -30,7 +30,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Run tests
-      run: dotnet test Tests/Kodify.Tests.csproj --configuration Release --logger "trx;LogFileName=TestResults.trx"
+      run: dotnet test ../Tests/Tests.csproj --configuration Release --logger "trx;LogFileName=TestResults.trx"
 
     - name: Publish test results
       if: always()
