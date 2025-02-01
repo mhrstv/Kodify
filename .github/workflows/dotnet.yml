@@ -13,6 +13,10 @@ jobs:
   build:
     name: Build, Test & Package
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      actions: read
+      contents: read
 
     steps:
     - name: Checkout code
@@ -33,7 +37,7 @@ jobs:
       run: dotnet test Tests/Tests.csproj --configuration Release --logger "trx;LogFileName=TestResults.trx" --results-directory ./TestResults
 
     - name: Publish test results
-      if: always()
+      if: ${{ !github.event.pull_request.head.repo.fork }}
       uses: dorny/test-reporter@v1
       with:
         name: Test Results
