@@ -23,10 +23,9 @@ namespace Kodify.AutoDoc.Services
             foreach (var file in csFiles)
             {
                 var fileContent = File.ReadAllText(file);
-                // Pass the file path into the parser so it is recorded.
                 var tree = CSharpSyntaxTree.ParseText(fileContent, path: file);
                 var root = tree.GetRoot();
-                var classDeclarations = root.DescendantNodes().OfType<ClassDeclarationSyntax>();
+                var classDeclarations = root.DescendantNodes().OfType<ClassDeclarationSyntax>().ToList();
                 
                 foreach (var classDecl in classDeclarations)
                 {
