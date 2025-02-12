@@ -9,19 +9,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Kodify.AutoDoc.Services
 {
-    /// <summary>
-    /// Generates interactive PlantUML (PUML) diagrams from C# source code.
-    /// The generated diagram groups classes by namespace and makes each class clickable,
-    /// linking to its source file.
-    /// </summary>
     public class ClassDiagramGenerator
     {
-        /// <summary>
-        /// Parses all .cs files found under the given sourcePath and creates a PUML
-        /// diagram (with clickable classes) in the outputPath folder.
-        /// </summary>
-        /// <param name="sourcePath">The root directory to search for C# files.</param>
-        /// <param name="outputPath">The folder where the generated PUML file will be saved.</param>
         public void GenerateInteractiveClassDiagram(string sourcePath, string outputPath)
         {
             // Get all C# files recursively.
@@ -109,12 +98,6 @@ namespace Kodify.AutoDoc.Services
             File.WriteAllText(outputFile, sb.ToString());
         }
         
-        /// <summary>
-        /// Helper method that walks the syntax tree to find the namespace declaration.
-        /// Returns null if the class is not inside a namespace.
-        /// </summary>
-        /// <param name="classDecl">The class declaration syntax node.</param>
-        /// <returns>The namespace as a string or null.</returns>
         private string GetNamespace(ClassDeclarationSyntax classDecl)
         {
             SyntaxNode parent = classDecl.Parent;
