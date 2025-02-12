@@ -21,7 +21,9 @@ namespace Kodify.AutoDoc.Services
 
         public void GenerateClassDiagrams(string outputPath)
         {
-            _classDiagramGenerator.GenerateClassDiagrams(outputPath);
+            // Automatically detect the project root as the source path for the diagram.
+            var sourcePath = DetectProjectRoot();
+            _classDiagramGenerator.GenerateInteractiveClassDiagram(sourcePath, outputPath);
         }
 
         public Kodify.AutoDoc.Models.ProjectInfo Analyze()
@@ -213,8 +215,8 @@ namespace Kodify.AutoDoc.Services
         {
             try
             {
-                var repoPath = Repository.Discover(projectPath);
-                using var repo = new Repository(repoPath);
+                var repoPath = LibGit2Sharp.Repository.Discover(projectPath);
+                using var repo = new LibGit2Sharp.Repository(repoPath);
                 return (true, repo.Network.Remotes.FirstOrDefault()?.Url ?? "No remote repository configured");
             }
             catch
@@ -231,10 +233,10 @@ namespace Kodify.AutoDoc.Services
             // First check for Git repository root
             try
             {
-                var repoPath = Repository.Discover(directory.FullName);
+                var repoPath = LibGit2Sharp.Repository.Discover(directory.FullName);
                 if (!string.IsNullOrEmpty(repoPath))
                 {
-                    using var repo = new Repository(repoPath);
+                    using var repo = new LibGit2Sharp.Repository(repoPath);
                     trueRoot = new DirectoryInfo(repo.Info.WorkingDirectory);
                 }
             }
