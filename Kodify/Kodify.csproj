@@ -5,8 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	  <PackageId>Kodify</PackageId>
-    <Description>A .NET library that provides AI-powered code generation, problem generation, and code explanation capabilities.</Description>
-    <Version>0.0.24</Version>
+    <Description>Kodify is an AI-powered .NET library that automates code documentation generation, project analysis, and technical content enhancement.</Description>
+    <Version>0.0.28</Version>
     <Authors>mhrstv</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
