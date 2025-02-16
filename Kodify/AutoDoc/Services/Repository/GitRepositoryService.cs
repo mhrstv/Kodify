@@ -70,6 +70,11 @@ namespace Kodify.AutoDoc.Services.Repository
                     .Replace("git@gitlab.com:", "https://gitlab.com/")
                     .Replace(".git", "");
             }
+            
+            if (gitUrl.EndsWith(".git"))
+            {
+                gitUrl = gitUrl.Substring(0, gitUrl.Length - 4);
+            }
             return gitUrl;
         }
     }

@@ -1,16 +1,14 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using LibGit2Sharp;
-using System;
-using System.Threading.Tasks;
-using Kodify.AutoDoc.Models;
+using Kodify.AutoDoc.Services.Repository;
 using Kodify.AI.Services;
 using Kodify.AutoDoc.Services;
 using Kodify.AutoDoc.Services.Documentation;
-using Kodify.AutoDoc.Services.Repository;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Text;
 using System.Reflection;
 
 namespace Kodify.AutoDoc.Services.Documentation
@@ -18,6 +16,7 @@ namespace Kodify.AutoDoc.Services.Documentation
     public class ChangelogGenerator
     {
         private readonly GitRepositoryService _gitService;
+        private string _githubRepoUrl; // Normalized URL of the GitHub repo (if available)
 
         public ChangelogGenerator() : this(new GitRepositoryService())
         {
@@ -28,25 +27,38 @@ namespace Kodify.AutoDoc.Services.Documentation
             _gitService = gitService;
         }
 
-        // Parameterless GenerateChangelog method that automatically detects the project path.
+        // Generate changelog by automatically detecting the project path.
         public void GenerateChangelog()
         {
-            // Automatically detect the project path using the GitRepositoryService.
             var projectPath = _gitService.DetectProjectRoot();
             GenerateChangelog(projectPath);
         }
 
-        // Existing GenerateChangelog method that accepts a projectPath.
+        // Generate changelog by providing an input path
         public void GenerateChangelog(string projectPath)
         {
-            // Determine root and prepare the output file.
             var rootPath = _gitService.DetectProjectRoot(projectPath);
             var outputPath = Path.Combine(rootPath, "CHANGELOG.md");
             Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
 
+            // Determine if the repository is hosted on GitHub.
+            var (hasGit, remoteUrl) = _gitService.CheckForGitRepository(projectPath);
+            if (hasGit && !string.IsNullOrEmpty(remoteUrl) && remoteUrl.Contains("github.com"))
+            {
+                // Store the normalized GitHub URL for linking issue references.
+                _githubRepoUrl = remoteUrl;
+            }
+            else
+            {
+                _githubRepoUrl = null;
+            }
+
             using (var writer = new StreamWriter(outputPath))
             {
                 writer.WriteLine("# Changelog");
+                writer.WriteLine();
+                writer.WriteLine("This changelog aims to highlight user-impactful changes with references to issues/PRs where available.");
+                writer.WriteLine();
 
                 var repoPath = LibGit2Sharp.Repository.Discover(projectPath);
                 if (repoPath == null)
@@ -121,8 +133,8 @@ namespace Kodify.AutoDoc.Services.Documentation
         private void WriteCommitDetails(StreamWriter writer, Commit commit)
         {
             var messageParts = commit.Message.Split(new[] { '\n' }, 2);
-            var subject = messageParts[0].Trim();
-            var body = messageParts.Length > 1 ? messageParts[1].Trim() : null;
+            var subject = ReplaceIssueReferences(messageParts[0].Trim());
+            var body = messageParts.Length > 1 ? ReplaceIssueReferences(messageParts[1].Trim()) : null;
 
             writer.WriteLine($"- **{subject}**");
             writer.WriteLine($"  *Commit: {commit.Sha[..7]} | Date: {commit.Committer.When:yyyy-MM-dd} | Author: {commit.Author.Name}*");
@@ -138,6 +150,18 @@ namespace Kodify.AutoDoc.Services.Documentation
                 writer.WriteLine("  ```");
             }
             writer.WriteLine();
+        }
+
+        private string ReplaceIssueReferences(string text)
+        {
+            if (string.IsNullOrEmpty(_githubRepoUrl))
+                return text;
+
+            return Regex.Replace(text, "#(\\d+)", m =>
+            {
+                var issueNumber = m.Groups[1].Value;
+                return $"[#{issueNumber}]({_githubRepoUrl}/issues/{issueNumber})";
+            });
         }
     }
 } 
