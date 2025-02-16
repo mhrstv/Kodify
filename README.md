@@ -1,86 +1,157 @@
 # Kodify
 
-Kodify is an intelligent project automation library that streamlines documentation, release management, and development workflows.
+Kodify is an **AI-powered .NET library** that automates your project's documentation, code analysis, changelog generation, and visualization. It streamlines development workflows by enhancing standard project metadata with AI-curated explanations, intelligent code analysis using Roslyn, and interactive class diagrams via PlantUML.
+
+![.NET](https://img.shields.io/badge/.NET-8.0-blue?style=for-the-badge&logo=.net&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub-Actions-active?style=for-the-badge&logo=github)
+![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)
+
+---
 
 ## Features
 
-- **Automated Documentation**: Generate comprehensive documentation from source code and commit history
-- **Changelog Automation**: Create maintainer-friendly changelogs with semantic version tracking
-- **CI/CD Integration**: Smart GitHub Actions workflow generation and optimization
-- **Project Scaffolding**: Automated setup for new projects with best-practice templates
-- **Dependency Management**: Intelligent NuGet package updates and compatibility checks
-- **Code Analysis**: Automated code quality reports and technical debt tracking
+- **Automated Documentation Generation**  
+  Generate comprehensive, user-focused README files using structured project data and AI-enhanced language. The documentation is built from source analysis and enhanced via the OpenAI API.
 
-### Supported Platforms
+- **Changelog Automation**  
+  Automatically generate curated changelogs by scanning Git commit history. Commit messages are processed to replace issue/PR references (like `#123`) with clickable GitHub links for improved traceability.
 
-![.NET](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white) ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white) ![NuGet](https://img.shields.io/badge/NuGet-004880?style=for-the-badge&logo=nuget&logoColor=white) ![Markdown](https://img.shields.io/badge/markdown-%23000000.svg?style=for-the-badge&logo=markdown&logoColor=white) ![YAML](https://img.shields.io/badge/YAML-%232C8EBB.svg?style=for-the-badge)
+- **Static Code Analysis**  
+  Leverage Roslyn to analyze your C# code, detect API controllers, extract key project structure details, and automatically detect license files.
 
+- **Interactive Class Diagrams**  
+  Create comprehensive UML class diagrams (in PUML) grouped by namespace. Each class in the diagram links directly to its source file for quick navigation.
+
+- **Seamless Git Integration**  
+  Automatically detect your project's Git repository; normalize remote URLs and, when applicable, integrate with GitHub to enrich commit messages with clickable links.
+
+- **Customizable Content Generation**  
+  Use the included ContentBuilder and ReadmeGenerator to either automatically generate structured documentation or compose manual content enhanced by AI.
+
+- **OpenAI-Powered Enhancement**  
+  Improve documentation language, structure, and consistency through customizable prompt templates and an integrated OpenAI service.
+
+---
 
 ## Installation
+
+Install Kodify via the .NET CLI:
 
 ```shell
 dotnet add package Kodify
 ```
 
-## Configuration - W.I.P.
+---
 
-Set up automation rules in your .kodifyrc config file:
+## Quick Start
 
-```yaml
-rules:
-  documentation:
-    auto_update: true
-    formats: [md, pdf]
-  changelog:
-    semantic_versioning: true
-  ci_cd:
-    parallel_jobs: 4
-    cache_ttl: 24h
+### 1. Analyze Your Project
+
+Use the `CodeAnalyzer` to scan your project, detect API controllers and license details, and assemble comprehensive project information for in-app usage - (`ProjectInfo`):
+
+```csharp
+var analyzer = new CodeAnalyzer();
+var projectInfo = analyzer.Analyze(); // Automatically detects project root and analyzes all C# files.
 ```
 
-## Usage Examples
+### 2. Generate Documentation
 
-### Automated Documentation Generation
+Generate a README by combining analytical data with AI enhancement:
+
 ```csharp
-var docs = Kodify.GenerateDocumentation(
-    projectPath: "./src",
-    outputFormats: new[] { "md", "html" }, // W.I.P.
-    includeDiagrams: true
+// Configure your OpenAI API key via the environment variable: OPENAI_API_KEY
+var openAiConfig = OpenAIConfig.Default;
+var openAiService = new OpenAIService(openAiConfig);
+var markdownGenerator = new MarkdownGenerator(openAiService);
+
+// Generate a README file using the analyzed project info
+await markdownGenerator.GenerateReadMe(
+    projectInfo,
+    "MyProject",
+    "A concise summary that showcases the project's purpose, features, and value.",
+    "Step-by-step usage instructions go here..." // Shortened, of course
 );
 ```
 
-### Changelog Management - W.I.P.
+### 3. Create a Changelog
+
+Automatically generate a changelog that aggregates commit history:
+
 ```csharp
-var changelog = Kodify.UpdateChangelog(
-    sinceVersion: "1.2.0",
-    releaseNotes: "Added security scanning features",
-    bumpType: VersionBump.Minor
-);
+// This invokes the ChangelogGenerator which creates a CHANGELOG.md in your project root
+markdownGenerator.GenerateChangelog();
 ```
 
-## Core Capabilities
+### 4. Generate Interactive Class Diagrams
 
-### Intelligent Automation
-- Automatic documentation sync with source changes
-- Semantic versioning enforcement
-- CI/CD pipeline optimization // TBR
-- Dependency vulnerability scanning // TBR
-- Cross-platform project scaffolding
+Visualize your project's structure by generating class diagrams:
 
-### Integration Support
-- GitHub/GitLab/Bitbucket native integration
-- Jira/Linear issue tracking sync // TBR
-- Slack/Teams notification pipelines // TBR
-- NuGet/NPM package registry support
+```csharp
+var outputDiagramPath = Path.Combine(projectInfo.ProjectPath, "Diagrams");
+var diagramGenerator = new ClassDiagramGenerator();
+diagramGenerator.GenerateInteractiveClassDiagram(projectInfo.ProjectPath, outputDiagramPath);
+```
 
-## Dependencies
+---
 
-- .NET 8.0
-- LibGit2Sharp (v0.27.0)
-- YamlDotNet (v12.3.1) // TBR
+## Detailed Usage
 
-## License
-MIT License - See [LICENSE](LICENSE)
+### Documentation & Content Generation
+
+- **Structured Content Building:**  
+  The `ContentBuilder` compiles key details (e.g., API detection, licenses, and key features) into markdown, which is later enhanced by the AI.
+
+- **Manual Content Customization:**  
+  Not a fan of full automation? Use `BuildManualContent` from the ContentBuilder to create a more traditional README layout, then enhance with the AI service.
+
+- **AI Enhancement:**  
+  The `ReadmeGenerator` and `MarkdownGenerator` blend the raw content with prompt templates (defined in `PromptTemplates.cs`), resulting in user-friendly, production-ready documentation.
+
+### Changelog Generation
+
+- **Commit Curation:**  
+  The `ChangelogGenerator` groups changes by Git tags (or treats commit history as unreleased changes) and annotates commit messages. Issue references like `#123` are automatically converted to clickable links when a GitHub repository is detected.
+  
+### Code Analysis & Diagram Generation
+
+- **CodeAnalyzer:**  
+  Parses C# source files to generate a `ProjectInfo` object. It provides insights such as detected API controllers, directory structures, and license files.
+
+- **ClassDiagramGenerator:**  
+  Scans all C# files and builds an interactive PUML class diagram that you can view with any PlantUML-compatible tool.
+
+### Git Integration
+
+- **GitRepositoryService & GitHubApiService:**  
+  These services detect Git repositories, normalize URLs (removing any trailing `.git`), and optionally integrate with GitHub for enriching repository context and commit annotations.
+
+---
+
+## Configuration & Customization
+
+- **OpenAI API:**  
+  Set up your `OpenAIConfig` by ensuring the `OPENAI_API_KEY` environment variable is properly configured.
+
+- **Prompt & Template Customization:**  
+  Edit `PromptTemplates.cs` to tailor the AI prompts to your desired tone and structure.
+
+- **Advanced Settings:**  
+  Extend classes like `ContentBuilder` and `ReadmeGenerator` to further customize the generated documentation and changelog to suit your project's style.
+
+---
 
 ## Project Resources
-- [GitHub Repository](https://github.com/mhrstv/kodify)
+
+- **Source Code & Repository:**  
+  [GitHub Repository](https://github.com/mhrstv/Kodify)
+
+- **License:**  
+  Kodify is released under the MIT License. See [LICENSE](LICENSE) for more information.
+
+---
+
+## Dependencies
+- **LibGit2Sharp** for Git operations.
+- **Microsoft.CodeAnalysis (Roslyn)** for robust code analysis.
+- **OpenAI API** for state-of-the-art language enhancements.
+- **PlantUML** for generating interactive class diagrams.
