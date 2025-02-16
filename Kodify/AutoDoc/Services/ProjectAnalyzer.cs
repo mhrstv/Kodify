@@ -10,11 +10,11 @@ using Kodify.AutoDoc.Models;
 
 namespace Kodify.AutoDoc.Services
 {
-    public class CodeAnalyzer
+    public class ProjectAnalyzer
     {
         private readonly ClassDiagramGenerator _classDiagramGenerator;
 
-        public CodeAnalyzer()
+        public ProjectAnalyzer()
         {
             _classDiagramGenerator = new ClassDiagramGenerator();
         }
