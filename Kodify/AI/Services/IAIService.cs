@@ -12,4 +12,6 @@ public interface IAIService
        bool hasApi,
        LicenseInfo license 
    );
+
+   Task<string> EnhanceChangelogAsync(string rawChangelog);
 } 

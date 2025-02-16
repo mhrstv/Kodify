@@ -1,6 +1,9 @@
 using System.Threading.Tasks;
 using Kodify.AutoDoc.Models;
 using Kodify.AI.Services;
+using Kodify.AI.Configuration;
+using Kodify.AI;
+using Kodify.AI.Models;
 using Kodify.AutoDoc.Services.Documentation;
 using Kodify.AutoDoc.Services.Repository;
 
@@ -33,6 +36,11 @@ namespace Kodify.AutoDoc.Services.Documentation
         public void GenerateChangelog(string projectPath)
         {
             _changelogGenerator.GenerateChangelog(projectPath);
+        }
+
+        public async void GenerateChangelog(IAIService aiService)
+        {
+            await _changelogGenerator.GenerateChangelog(aiService);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿namespace Kodify.AI.Constants;
+using System.Collections.Generic;
 
 public static class PromptTemplates
 {
@@ -63,6 +64,17 @@ public static class PromptTemplates
         - No code blocks unless for actual code examples
         - Section headers must match template hierarchy
         - Final output must be production-ready
+    ";
+    }
+
+    public static string GetChangelogEnhancementPrompt(string rawChangelog)
+    {
+        return $@"
+        Please clean up the following changelog text by improving clarity and readability of commit messages and PR annotations.
+        Keep the overall structure (section headers, grouping, formatting, etc.) intact and modify only parts that are unclear or messy.
+
+        RAW CHANGELOG:
+        {rawChangelog}
     ";
     }
 

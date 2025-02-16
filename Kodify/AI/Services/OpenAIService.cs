@@ -4,6 +4,8 @@ using Kodify.AI.Constants;
 using OpenAI.Chat;
 using System.Threading.Tasks;
 using Kodify.AutoDoc.Models;
+using System;
+using System.Collections.Generic;
 namespace Kodify.AI.Services;
 
 public class OpenAIService : IAIService
@@ -53,9 +55,16 @@ public class OpenAIService : IAIService
         }
     }
 
+    public async Task<string> EnhanceChangelogAsync(string rawChangelog)
+    {
+        var prompt = PromptTemplates.GetChangelogEnhancementPrompt(rawChangelog);
+        ChatCompletion completion = await _client.CompleteChatAsync(prompt);
+        return ProcessEnhancedDocumentation(completion.Content[0].Text);
+    }
+
     private string ProcessEnhancedDocumentation(string content)
     {
-        // Post-processing rules
+        // Post-processing rules: remove any markdown code fences used by the model.
         return content
             .Replace("```markdown", "")
             .Replace("```", "")
