@@ -28,9 +28,9 @@ namespace Kodify.AutoDoc.Services.Documentation
             _changelogGenerator = new ChangelogGenerator();
         }
 
-        public async Task GenerateReadMe(ProjectInfo projectInfo, string projectName, string projectSummary, string usageInstructions, string template = null)
+        public async Task GenerateReadMeAsync(ProjectInfo projectInfo, string projectName, string projectSummary, string usageInstructions, string template = null)
         {
-            await _readmeGenerator.GenerateReadMe(projectInfo, projectName, projectSummary, usageInstructions, template);
+            await _readmeGenerator.GenerateReadMeAsync(projectInfo, projectName, projectSummary, usageInstructions, template);
         }
 
         public void GenerateChangelog()

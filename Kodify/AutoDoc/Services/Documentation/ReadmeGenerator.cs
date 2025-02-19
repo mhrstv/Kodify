@@ -32,7 +32,7 @@ namespace Kodify.AutoDoc.Services.Documentation
             _gitService = gitService;
         }
 
-        public async Task GenerateReadMe(ProjectInfo projectInfo, string projectName, string projectSummary, string usageInstructions, string template = null)
+        public async Task GenerateReadMeAsync(ProjectInfo projectInfo, string projectName, string projectSummary, string usageInstructions, string template = null)
         {
             // Determine the project root using the Git service.
             var rootPath = _gitService.DetectProjectRoot(projectInfo.ProjectPath);
