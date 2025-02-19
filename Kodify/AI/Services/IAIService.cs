@@ -12,6 +12,6 @@ public interface IAIService
        bool hasApi,
        LicenseInfo license 
    );
-
+   Task<string> EnhanceDocumentationAsync(string template, List<string> readmeSections);
    Task<string> EnhanceChangelogAsync(string rawChangelog);
 } 
