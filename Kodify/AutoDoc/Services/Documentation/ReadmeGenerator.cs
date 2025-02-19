@@ -9,18 +9,23 @@ namespace Kodify.AutoDoc.Services.Documentation
 {
     public class ReadmeGenerator
     {
-        private readonly OpenAIService _aiService;
+        private readonly IAIService _aiService;
         private readonly ContentBuilder _contentBuilder;
         private readonly GitRepositoryService _gitService;
 
-        // New constructor that only requires the OpenAIService.
-        public ReadmeGenerator(OpenAIService aiService)
+        // Parameterless constructor overload.
+        public ReadmeGenerator() : this(null, new ContentBuilder(), new GitRepositoryService())
+        {
+        }
+
+        // Constructor with AI service implemented
+        public ReadmeGenerator(IAIService aiService)
             : this(aiService, new ContentBuilder(), new GitRepositoryService())
         {
         }
 
         // Constructor that allows explicit dependency injection.
-        public ReadmeGenerator(OpenAIService aiService, ContentBuilder contentBuilder, GitRepositoryService gitService)
+        public ReadmeGenerator(IAIService aiService, ContentBuilder contentBuilder, GitRepositoryService gitService)
         {
             _aiService = aiService;
             _contentBuilder = contentBuilder;
@@ -37,22 +42,39 @@ namespace Kodify.AutoDoc.Services.Documentation
             using (var writer = new StreamWriter(outputPath))
             {
                 string finalContent;
-                if (!string.IsNullOrEmpty(template))
+                if (_aiService == null)
                 {
-                    // Build manual content and then enhance it using the AI service.
-                    var readmeContent = _contentBuilder.BuildManualContent(projectInfo, projectName, projectSummary, usageInstructions);
-                    finalContent = await _aiService.EnhanceDocumentationAsync(template, readmeContent);
+                    // If no AI service is available, then simply use the generated content.
+                    if (!string.IsNullOrEmpty(template))
+                    {
+                        // Build manual content from the content builder
+                        var readmeContent = _contentBuilder.BuildManualContent(projectInfo, projectName, projectSummary, usageInstructions);
+                        finalContent = string.Join("\n", readmeContent);
+                    }
+                    else
+                    {
+                        finalContent = _contentBuilder.BuildStructuredContent(projectInfo);
+                    }
                 }
                 else
                 {
-                    // Build structured content and generate documentation from it.
-                    var structuredContent = _contentBuilder.BuildStructuredContent(projectInfo);
-                    finalContent = await _aiService.GenerateDocumentationAsync(
-                        projectName,
-                        projectSummary,
-                        usageInstructions,
-                        structuredContent,
-                        projectInfo.HasWebApi, projectInfo.License);
+                    if (!string.IsNullOrEmpty(template))
+                    {
+                        // Build manual content and then enhance it using the AI service.
+                        var readmeContent = _contentBuilder.BuildManualContent(projectInfo, projectName, projectSummary, usageInstructions);
+                        finalContent = await _aiService.EnhanceDocumentationAsync(template, readmeContent);
+                    }
+                    else
+                    {
+                        // Build structured content and generate documentation from it via the AI service.
+                        var structuredContent = _contentBuilder.BuildStructuredContent(projectInfo);
+                        finalContent = await _aiService.GenerateDocumentationAsync(
+                            projectName,
+                            projectSummary,
+                            usageInstructions,
+                            structuredContent,
+                            projectInfo.HasWebApi, projectInfo.License);
+                    }
                 }
                 await writer.WriteLineAsync(finalContent);
             }

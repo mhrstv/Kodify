@@ -58,8 +58,6 @@ namespace Kodify.AutoDoc.Services.Documentation
             {
                 writer.WriteLine("# Changelog");
                 writer.WriteLine();
-                writer.WriteLine("This changelog aims to highlight user-impactful changes with references to issues/PRs where available.");
-                writer.WriteLine();
 
                 var repoPath = LibGit2Sharp.Repository.Discover(projectPath);
                 if (repoPath == null)
@@ -131,7 +129,7 @@ namespace Kodify.AutoDoc.Services.Documentation
             }
         }
 
-        public async Task GenerateChangelog(IAIService aiService)
+        public async Task GenerateChangelogAsync(IAIService aiService)
         {
             // Determine the project root.
             var projectPath = _gitService.DetectProjectRoot();
@@ -234,20 +232,25 @@ namespace Kodify.AutoDoc.Services.Documentation
             var messageParts = commit.Message.Split(new[] { '\n' }, 2);
             var subject = ReplaceIssueReferences(messageParts[0].Trim());
             var body = messageParts.Length > 1 ? ReplaceIssueReferences(messageParts[1].Trim()) : null;
-
-            writer.WriteLine($"- **{subject}**");
-            writer.WriteLine($"  *Commit: {commit.Sha.Substring(0, 7)} | Date: {commit.Committer.When:yyyy-MM-dd} | Author: {commit.Author.Name}*");
-
+            
+            // Write the subject line with a forced markdown line break (using two trailing spaces)
+            writer.WriteLine($"- **{subject}**  ");
+            
+            // Write the commit details (shortened SHA, date, author) with a forced line break
+            writer.WriteLine($"  *Commit: {commit.Sha.Substring(0, 7)} | Date: {commit.Committer.When:yyyy-MM-dd} | Author: {commit.Author.Name}*  ");
+            
+            // If there is extra commit message body, join the lines and output it on a new line
             if (!string.IsNullOrWhiteSpace(body))
             {
-                writer.WriteLine();
-                writer.WriteLine("  ```");
-                foreach (var line in body.Split('\n'))
-                {
-                    writer.WriteLine($"  {line.Trim()}");
-                }
-                writer.WriteLine("  ```");
+                 var shortBody = string.Join(" ", 
+                     body.Split('\n')
+                         .Select(line => line.Trim())
+                         .Where(line => !string.IsNullOrWhiteSpace(line))
+                 );
+                 writer.WriteLine($"{shortBody}");
             }
+            
+            // A blank line to separate commit items
             writer.WriteLine();
         }
 

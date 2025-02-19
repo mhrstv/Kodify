@@ -14,13 +14,18 @@ namespace Kodify.AutoDoc.Services.Documentation
         private readonly ReadmeGenerator _readmeGenerator;
         private readonly ChangelogGenerator _changelogGenerator;
 
-        public MarkdownGenerator(OpenAIService aiService)
+        // Parameterless constructor overload.
+        public MarkdownGenerator() : this(null)
         {
-            var contentBuilder = new ContentBuilder();
-            var gitRepositoryService = new GitRepositoryService();
+            _readmeGenerator = new ReadmeGenerator();
+            _changelogGenerator = new ChangelogGenerator();
+        }
 
-            _readmeGenerator = new ReadmeGenerator(aiService, contentBuilder, gitRepositoryService);
-            _changelogGenerator = new ChangelogGenerator(gitRepositoryService);
+        // Constructor with AI service implemented
+        public MarkdownGenerator(IAIService aiService)
+        {
+            _readmeGenerator = new ReadmeGenerator(aiService);
+            _changelogGenerator = new ChangelogGenerator();
         }
 
         public async Task GenerateReadMe(ProjectInfo projectInfo, string projectName, string projectSummary, string usageInstructions, string template = null)
@@ -38,9 +43,9 @@ namespace Kodify.AutoDoc.Services.Documentation
             _changelogGenerator.GenerateChangelog(projectPath);
         }
 
-        public async void GenerateChangelog(IAIService aiService)
+        public async Task GenerateChangelogAsync(IAIService aiService)
         {
-            await _changelogGenerator.GenerateChangelog(aiService);
+            await _changelogGenerator.GenerateChangelogAsync(aiService);
         }
     }
 }
