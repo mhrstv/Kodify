@@ -12,19 +12,8 @@ namespace Kodify.AutoDoc.Services
 {
     public class ProjectAnalyzer
     {
-        private readonly ClassDiagramGenerator _classDiagramGenerator;
-
         public ProjectAnalyzer()
-        {
-            _classDiagramGenerator = new ClassDiagramGenerator();
-        }
-
-        public void GenerateClassDiagrams(string outputPath)
-        {
-            // Automatically detect the project root as the source path for the diagram.
-            var sourcePath = DetectProjectRoot();
-            _classDiagramGenerator.GenerateInteractiveClassDiagram(sourcePath, outputPath);
-        }
+        { }
 
         public Kodify.AutoDoc.Models.ProjectInfo Analyze()
         {
