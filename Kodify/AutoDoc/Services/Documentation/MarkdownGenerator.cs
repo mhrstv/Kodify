@@ -13,12 +13,16 @@ namespace Kodify.AutoDoc.Services.Documentation
     {
         private readonly ReadmeGenerator _readmeGenerator;
         private readonly ChangelogGenerator _changelogGenerator;
+        private readonly ProjectAnalyzer _projectAnalyzer;
+        private ProjectInfo _projectInfo;
 
         // Parameterless constructor overload.
         public MarkdownGenerator() : this(null)
         {
             _readmeGenerator = new ReadmeGenerator();
             _changelogGenerator = new ChangelogGenerator();
+            _projectAnalyzer = new ProjectAnalyzer();
+            _projectInfo = _projectAnalyzer.Analyze();
         }
 
         // Constructor with AI service implemented
@@ -26,6 +30,13 @@ namespace Kodify.AutoDoc.Services.Documentation
         {
             _readmeGenerator = new ReadmeGenerator(aiService);
             _changelogGenerator = new ChangelogGenerator();
+            _projectAnalyzer = new ProjectAnalyzer();
+            _projectInfo = _projectAnalyzer.Analyze();
+        }
+
+        public async Task GenerateReadMeAsync(string projectName, string projectSummary, string usageInstructions, string template = null)
+        {
+            await _readmeGenerator.GenerateReadMeAsync(_projectInfo, projectName, projectSummary, usageInstructions, template);
         }
 
         public async Task GenerateReadMeAsync(ProjectInfo projectInfo, string projectName, string projectSummary, string usageInstructions, string template = null)
