@@ -45,29 +45,28 @@ dotnet add package Kodify
 
 ## Quick Start
 
-### 1. Analyze Your Project
+### 1. Create an instance of an AI service
 
-Use the `CodeAnalyzer` to scan your project, detect API controllers and license details, and assemble comprehensive project information for in-app usage - (`ProjectInfo`):
+Use the `OpenAIService` to create an instance of the AI service which serves as your docs enhancer:
 
 ```csharp
-var analyzer = new CodeAnalyzer();
-var projectInfo = analyzer.Analyze(); // Automatically detects project root and analyzes all C# files.
+var aiConfig = new OpenAIConfig 
+{ 
+    ApiKey = "",
+    Model = "gpt-4o-mini" 
+};
+var aiService = new OpenAIService(openAiConfig);
 ```
 
-### 2. Generate Documentation
+### 2. Generate your README file
 
 Generate a README by combining analytical data with AI enhancement:
 
 ```csharp
-// Configure your OpenAI API key via the environment variable: OPENAI_API_KEY
-var openAiConfig = OpenAIConfig.Default;
-var openAiService = new OpenAIService(openAiConfig);
-var markdownGenerator = new MarkdownGenerator(openAiService);
+var markdownGenerator = new MarkdownGenerator(aiService);
 
-// Generate a README file using the analyzed project info
-await markdownGenerator.GenerateReadMe(
-    projectInfo,
-    "MyProject",
+// Generate a README file for your project
+await markdownGenerator.GenerateReadMe("MyProject",
     "A concise summary that showcases the project's purpose, features, and value.",
     "Step-by-step usage instructions go here..." // Shortened, of course
 );
@@ -80,6 +79,7 @@ Automatically generate a changelog that aggregates commit history:
 ```csharp
 // This invokes the ChangelogGenerator which creates a CHANGELOG.md in your project root
 markdownGenerator.GenerateChangelog();
+markdownGenerator.GenerateChangelog(aiService); // This uses the AI service to clean up messy commits, PRs and comments.
 ```
 
 ### 4. Generate Interactive Class Diagrams
