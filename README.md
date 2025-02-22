@@ -1,6 +1,6 @@
 # Kodify
 
-Kodify is an **AI-powered .NET library** that automates your project's documentation, code analysis, changelog generation, and visualization. It streamlines development workflows by enhancing standard project metadata with AI-curated explanations, intelligent code analysis using Roslyn, and interactive class diagrams via PlantUML.
+Kodify is an **AI-powered .NET library** that automates your project's documentation, code analysis, changelog generation, and visualization. It streamlines development workflows by enhancing standard project metadata with AI-curated explanations, intelligent code analysis using Roslyn.
 
 ![.NET](https://img.shields.io/badge/.NET-8.0-blue?style=for-the-badge&logo=.net&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub-Actions-active?style=for-the-badge&logo=github)
