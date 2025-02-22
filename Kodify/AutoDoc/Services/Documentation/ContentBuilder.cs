@@ -4,7 +4,7 @@ using System.Text;
 using Kodify.AutoDoc.Models;
 using System.IO;
 
-namespace Kodify.AutoDoc.Services.Documentation
+namespace Kodify.AutoDoc.Documentation
 {
     public class ContentBuilder
     {

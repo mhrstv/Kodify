@@ -5,14 +5,14 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using LibGit2Sharp;
-using Kodify.AutoDoc.Services.Repository;
+using Kodify.AutoDoc.Repository;
 using Kodify.AI.Services;
-using Kodify.AutoDoc.Services;
-using Kodify.AutoDoc.Services.Documentation;
+using Kodify.AutoDoc;
+using Kodify.AutoDoc.Documentation;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Reflection;
 
-namespace Kodify.AutoDoc.Services.Documentation
+namespace Kodify.AutoDoc.Documentation
 {
     public class ChangelogGenerator
     {

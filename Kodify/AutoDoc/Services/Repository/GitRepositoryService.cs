@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using LibGit2Sharp;
 
-namespace Kodify.AutoDoc.Services.Repository
+namespace Kodify.AutoDoc.Repository
 {
     public class GitRepositoryService
     {
@@ -76,6 +76,54 @@ namespace Kodify.AutoDoc.Services.Repository
                 gitUrl = gitUrl.Substring(0, gitUrl.Length - 4);
             }
             return gitUrl;
+        }
+
+        public string GetDefaultBranch()
+        {
+            var projectPath = DetectProjectRoot();
+            try
+            {
+                var repoPath = LibGit2Sharp.Repository.Discover(projectPath);
+                if (string.IsNullOrEmpty(repoPath)) return "main"; // default fallback
+
+                using var repo = new LibGit2Sharp.Repository(repoPath);
+                
+                // Try to get the default branch from the origin remote
+                var origin = repo.Network.Remotes["origin"];
+                if (origin != null)
+                {
+                    var originRef = repo.Branches
+                        .FirstOrDefault(b => b.IsRemote && b.FriendlyName.StartsWith("origin/HEAD"))
+                        ?.FriendlyName;
+                        
+                    if (originRef != null)
+                    {
+                        // Convert "origin/HEAD -> origin/main" to "main"
+                        var parts = originRef.Split(new[] { " -> " }, StringSplitOptions.None);
+                        if (parts.Length > 1)
+                        {
+                            return parts[1].Replace("origin/", "");
+                        }
+                    }
+                }
+
+                // Fallback: Check common branch names
+                var commonBranches = new[] { "main", "master", "develop" };
+                foreach (var branchName in commonBranches)
+                {
+                    if (repo.Branches[branchName] != null)
+                    {
+                        return branchName;
+                    }
+                }
+
+                // Final fallback: return the current branch name
+                return repo.Head.FriendlyName;
+            }
+            catch
+            {
+                return "main"; // default fallback if anything goes wrong
+            }
         }
     }
 } 

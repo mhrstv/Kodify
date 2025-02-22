@@ -4,10 +4,10 @@ using Kodify.AI.Services;
 using Kodify.AI.Configuration;
 using Kodify.AI;
 using Kodify.AI.Models;
-using Kodify.AutoDoc.Services.Documentation;
-using Kodify.AutoDoc.Services.Repository;
+using Kodify.AutoDoc.Documentation;
+using Kodify.AutoDoc.Repository;
 
-namespace Kodify.AutoDoc.Services.Documentation
+namespace Kodify.AutoDoc.Documentation
 {
     public class MarkdownGenerator
     {

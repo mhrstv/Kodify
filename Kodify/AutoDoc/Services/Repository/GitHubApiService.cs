@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace Kodify.AutoDoc.Services.Repository
+namespace Kodify.AutoDoc.Repository
 {
     public class GitHubApiService
     {
@@ -23,7 +23,7 @@ namespace Kodify.AutoDoc.Services.Repository
         {
             var url = $"https://api.github.com/repos/{owner}/{repo}";
             var request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.Headers.UserAgent.Add(new ProductInfoHeaderValue("KodifyAutoDoc", "1.0"));
+            request.Headers.UserAgent.Add(new ProductInfoHeaderValue("Kodify", "1.0"));
             var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             string content = await response.Content.ReadAsStringAsync();

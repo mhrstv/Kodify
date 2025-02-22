@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using LibGit2Sharp;
 using Kodify.AutoDoc.Models;
 
-namespace Kodify.AutoDoc.Services
+namespace Kodify.AutoDoc
 {
     public class ProjectAnalyzer
     {

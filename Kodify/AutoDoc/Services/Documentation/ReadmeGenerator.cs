@@ -3,9 +3,9 @@ using System.IO;
 using System.Threading.Tasks;
 using Kodify.AutoDoc.Models;
 using Kodify.AI.Services;
-using Kodify.AutoDoc.Services.Repository;
+using Kodify.AutoDoc.Repository;
 
-namespace Kodify.AutoDoc.Services.Documentation
+namespace Kodify.AutoDoc.Documentation
 {
     public class ReadmeGenerator
     {
