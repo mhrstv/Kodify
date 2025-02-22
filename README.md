@@ -19,9 +19,6 @@ Kodify is an **AI-powered .NET library** that automates your project's documenta
 - **Static Code Analysis**  
   Leverage Roslyn to analyze your C# code, detect API controllers, extract key project structure details, and automatically detect license files.
 
-- **Interactive Class Diagrams**  
-  Create comprehensive UML class diagrams (in PUML) grouped by namespace. Each class in the diagram links directly to its source file for quick navigation.
-
 - **Seamless Git Integration**  
   Automatically detect your project's Git repository; normalize remote URLs and, when applicable, integrate with GitHub to enrich commit messages with clickable links.
 
@@ -79,19 +76,8 @@ Automatically generate a changelog that aggregates commit history:
 ```csharp
 // This invokes the ChangelogGenerator which creates a CHANGELOG.md in your project root
 markdownGenerator.GenerateChangelog();
-markdownGenerator.GenerateChangelog(aiService); // This uses the AI service to clean up messy commits, PRs and comments.
+markdownGenerator.GenerateChangelog(aiService); // This overload uses the AI service to clean up messy commits, PRs and comments.
 ```
-
-### 4. Generate Interactive Class Diagrams
-
-Visualize your project's structure by generating class diagrams:
-
-```csharp
-var outputDiagramPath = Path.Combine(projectInfo.ProjectPath, "Diagrams");
-var diagramGenerator = new ClassDiagramGenerator();
-diagramGenerator.GenerateInteractiveClassDiagram(projectInfo.ProjectPath, outputDiagramPath);
-```
-
 ---
 
 ## Detailed Usage
@@ -112,13 +98,10 @@ diagramGenerator.GenerateInteractiveClassDiagram(projectInfo.ProjectPath, output
 - **Commit Curation:**  
   The `ChangelogGenerator` groups changes by Git tags (or treats commit history as unreleased changes) and annotates commit messages. Issue references like `#123` are automatically converted to clickable links when a GitHub repository is detected.
   
-### Code Analysis & Diagram Generation
+### Code Analysis
 
 - **CodeAnalyzer:**  
   Parses C# source files to generate a `ProjectInfo` object. It provides insights such as detected API controllers, directory structures, and license files.
-
-- **ClassDiagramGenerator:**  
-  Scans all C# files and builds an interactive PUML class diagram that you can view with any PlantUML-compatible tool.
 
 ### Git Integration
 
@@ -151,7 +134,9 @@ diagramGenerator.GenerateInteractiveClassDiagram(projectInfo.ProjectPath, output
 ---
 
 ## Dependencies
-- **LibGit2Sharp** for Git operations.
-- **Microsoft.CodeAnalysis (Roslyn)** for robust code analysis.
-- **OpenAI API** for state-of-the-art language enhancements.
-- **PlantUML** for generating interactive class diagrams.
+- **LibGit2Sharp**
+- **Microsoft.CodeAnalysis (Roslyn)**
+- **OpenAI**
+- **Markdig** 
+- **Newtonsoft.Json**
+- **Humanizer.Core**
