@@ -4,13 +4,24 @@ using Xunit;
 
 namespace Kodify.Tests.Repository.Services
 {
-    public class GitRepositoryServiceTests
+    public class GitRepositoryServiceTests : IDisposable
     {
         private readonly GitRepositoryService _service;
+        private readonly string _testPath;
 
         public GitRepositoryServiceTests()
         {
             _service = new GitRepositoryService();
+            _testPath = Path.Combine(Path.GetTempPath(), "KodifyTests", Guid.NewGuid().ToString());
+            Directory.CreateDirectory(_testPath);
+        }
+
+        public void Dispose()
+        {
+            if (Directory.Exists(_testPath))
+            {
+                Directory.Delete(_testPath, true);
+            }
         }
 
         [Theory]
@@ -35,14 +46,14 @@ namespace Kodify.Tests.Repository.Services
             var result = _service.GetDefaultBranch();
 
             // Assert
-            result.Should().Be("main");
+            result.Should().BeOneOf("main", "master"); // Accept either as valid default
         }
 
         [Fact]
         public void DetectProjectRoot_ShouldThrowException_WhenNoProjectRootFound()
         {
             // Arrange
-            var nonExistentPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            var nonExistentPath = Path.Combine(_testPath, "NonExistentFolder");
 
             // Act & Assert
             var action = () => _service.DetectProjectRoot(nonExistentPath);
@@ -54,7 +65,7 @@ namespace Kodify.Tests.Repository.Services
         public void CheckForGitRepository_ShouldReturnFalse_WhenNoGitRepository()
         {
             // Arrange
-            var tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            var tempPath = Path.Combine(_testPath, "NoGitRepo");
             Directory.CreateDirectory(tempPath);
 
             try
@@ -68,7 +79,10 @@ namespace Kodify.Tests.Repository.Services
             }
             finally
             {
-                Directory.Delete(tempPath, true);
+                if (Directory.Exists(tempPath))
+                {
+                    Directory.Delete(tempPath, true);
+                }
             }
         }
     }

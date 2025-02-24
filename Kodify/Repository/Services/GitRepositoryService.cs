@@ -1,8 +1,8 @@
 namespace Kodify.Repository.Services
 {
-    public class GitRepositoryService
+    public class GitRepositoryService : IGitRepositoryService
     {
-        public string DetectProjectRoot(string startPath = null)
+        public virtual string DetectProjectRoot(string startPath = null)
         {
             var directory = new DirectoryInfo(startPath ?? Directory.GetCurrentDirectory());
             DirectoryInfo trueRoot = null;
@@ -37,7 +37,7 @@ namespace Kodify.Repository.Services
             return trueRoot?.FullName ?? throw new DirectoryNotFoundException("Project root not found");
         }
 
-        public (bool HasGit, string Url) CheckForGitRepository(string projectPath)
+        public virtual (bool HasGit, string Url) CheckForGitRepository(string projectPath)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace Kodify.Repository.Services
             }
         }
 
-        public string NormalizeGitUrl(string gitUrl)
+        public virtual string NormalizeGitUrl(string gitUrl)
         {
             if (gitUrl.StartsWith("git@"))
             {
@@ -74,7 +74,7 @@ namespace Kodify.Repository.Services
             return gitUrl;
         }
 
-        public string GetDefaultBranch()
+        public virtual string GetDefaultBranch()
         {
             var projectPath = DetectProjectRoot();
             try

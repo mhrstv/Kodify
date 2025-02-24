@@ -8,14 +8,14 @@ namespace Kodify.AutoDoc.Services
 {
     public class ChangelogGenerator
     {
-        private readonly GitRepositoryService _gitService;
+        private readonly IGitRepositoryService _gitService;
         private string _githubRepoUrl; // Normalized URL of the GitHub repo (if available)
 
         public ChangelogGenerator() : this(new GitRepositoryService())
         {
         }
 
-        public ChangelogGenerator(GitRepositoryService gitService)
+        public ChangelogGenerator(IGitRepositoryService gitService)
         {
             _gitService = gitService;
         }
