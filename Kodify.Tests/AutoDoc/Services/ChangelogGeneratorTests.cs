@@ -47,21 +47,21 @@ namespace Kodify.Tests.AutoDoc.Services
         {
             // Arrange
             var expectedPath = Path.Combine(_testPath, "project");
-            _gitServiceMock.Setup(x => x.DetectProjectRoot())
+            _gitServiceMock.Setup(x => x.DetectProjectRoot(It.IsAny<string>()))
                 .Returns(expectedPath);
 
             // Act & Assert
             var action = () => _generator.GenerateChangelog();
             action.Should().NotThrow();
 
-            _gitServiceMock.Verify(x => x.DetectProjectRoot(), Times.Once);
+            _gitServiceMock.Verify(x => x.DetectProjectRoot(It.IsAny<string>()), Times.Once);
         }
 
         [Fact]
         public async Task GenerateChangelogAsync_ShouldCallAIService()
         {
             // Arrange
-            _gitServiceMock.Setup(x => x.DetectProjectRoot())
+            _gitServiceMock.Setup(x => x.DetectProjectRoot(It.IsAny<string>()))
                 .Returns(_testPath);
             _gitServiceMock.Setup(x => x.CheckForGitRepository(It.IsAny<string>()))
                 .Returns((false, null));
