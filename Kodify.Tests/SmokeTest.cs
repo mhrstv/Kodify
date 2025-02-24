@@ -2,7 +2,7 @@
 
 namespace Kodify.Tests;
 
-public class SanityChecks
+public class TestCheck
 {
     [Fact]
     public void ShouldAlwaysPass()
