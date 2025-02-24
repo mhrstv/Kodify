@@ -7,7 +7,7 @@ namespace Kodify.AutoDoc.Services
     public class ReadmeGenerator
     {
         private readonly IAIService _aiService;
-        private readonly ContentBuilder _contentBuilder;
+        private readonly IContentBuilder _contentBuilder;
         private readonly IGitRepositoryService _gitService;
 
         // Parameterless constructor overload.
@@ -22,7 +22,7 @@ namespace Kodify.AutoDoc.Services
         }
 
         // Constructor that allows explicit dependency injection.
-        public ReadmeGenerator(IAIService aiService, ContentBuilder contentBuilder, IGitRepositoryService gitService)
+        public ReadmeGenerator(IAIService aiService, IContentBuilder contentBuilder, IGitRepositoryService gitService)
         {
             _aiService = aiService;
             _contentBuilder = contentBuilder;

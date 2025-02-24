@@ -3,9 +3,9 @@ using Kodify.Repository.Models;
 
 namespace Kodify.AutoDoc.Services
 {
-    public class ContentBuilder
+    public class ContentBuilder : IContentBuilder
     {
-        public string BuildStructuredContent(ProjectInfo projectInfo)
+        public virtual string BuildStructuredContent(ProjectInfo projectInfo)
         {
             var sb = new StringBuilder();
 
@@ -38,7 +38,7 @@ namespace Kodify.AutoDoc.Services
             return sb.ToString();
         }
 
-        public List<string> BuildManualContent(ProjectInfo projectInfo, string projectName, string projectSummary, string usageInstructions)
+        public virtual List<string> BuildManualContent(ProjectInfo projectInfo, string projectName, string projectSummary, string usageInstructions)
         {
             var content = new List<string>
             {

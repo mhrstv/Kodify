@@ -9,14 +9,14 @@ namespace Kodify.Tests.AutoDoc.Services
 {
     public class ChangelogGeneratorTests
     {
-        private readonly Mock<GitRepositoryService> _gitServiceMock;
+        private readonly Mock<IGitRepositoryService> _gitServiceMock;
         private readonly Mock<IAIService> _aiServiceMock;
         private readonly ChangelogGenerator _generator;
         private readonly string _testPath;
 
         public ChangelogGeneratorTests()
         {
-            _gitServiceMock = new Mock<GitRepositoryService>();
+            _gitServiceMock = new Mock<IGitRepositoryService>();
             _aiServiceMock = new Mock<IAIService>();
             _generator = new ChangelogGenerator(_gitServiceMock.Object);
             _testPath = Path.Combine(Path.GetTempPath(), "KodifyTests", Guid.NewGuid().ToString());
@@ -47,14 +47,20 @@ namespace Kodify.Tests.AutoDoc.Services
         {
             // Arrange
             var expectedPath = Path.Combine(_testPath, "project");
-            _gitServiceMock.Setup(x => x.DetectProjectRoot(It.IsAny<string>()))
+            _gitServiceMock.Setup(x => x.DetectProjectRoot())
                 .Returns(expectedPath);
+            _gitServiceMock.Setup(x => x.DetectProjectRoot(expectedPath))
+                .Returns(expectedPath);
+            _gitServiceMock.Setup(x => x.CheckForGitRepository(expectedPath))
+                .Returns((false, null));
 
-            // Act & Assert
-            var action = () => _generator.GenerateChangelog();
-            action.Should().NotThrow();
+            // Act
+            _generator.GenerateChangelog();
 
-            _gitServiceMock.Verify(x => x.DetectProjectRoot(It.IsAny<string>()), Times.Once);
+            // Assert
+            _gitServiceMock.Verify(x => x.DetectProjectRoot(), Times.Once);
+            _gitServiceMock.Verify(x => x.DetectProjectRoot(expectedPath), Times.Once);
+            _gitServiceMock.Verify(x => x.CheckForGitRepository(expectedPath), Times.Once);
         }
 
         [Fact]

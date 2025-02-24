@@ -53,10 +53,11 @@ namespace Kodify.Tests.Repository.Services
         public void DetectProjectRoot_ShouldThrowException_WhenNoProjectRootFound()
         {
             // Arrange
-            var nonExistentPath = Path.Combine(_testPath, "NonExistentFolder");
+            var emptyPath = Path.Combine(_testPath, "EmptyFolder");
+            Directory.CreateDirectory(emptyPath);
 
             // Act & Assert
-            var action = () => _service.DetectProjectRoot(nonExistentPath);
+            var action = () => _service.DetectProjectRoot(emptyPath);
             action.Should().Throw<DirectoryNotFoundException>()
                 .WithMessage("Project root not found");
         }
