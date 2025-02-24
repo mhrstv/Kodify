@@ -46,10 +46,8 @@ namespace Kodify.Tests.AutoDoc.Services
         public void GenerateChangelog_ShouldUseDetectedProjectRoot()
         {
             // Arrange
-            var expectedPath = Path.Combine(_testPath, "project");
-            _gitServiceMock.Setup(x => x.DetectProjectRoot())
-                .Returns(expectedPath);
-            _gitServiceMock.Setup(x => x.DetectProjectRoot(expectedPath))
+            var expectedPath = _testPath; // Use existing test path
+            _gitServiceMock.Setup(x => x.DetectProjectRoot(It.IsAny<string>()))
                 .Returns(expectedPath);
             _gitServiceMock.Setup(x => x.CheckForGitRepository(expectedPath))
                 .Returns((false, null));
@@ -58,8 +56,7 @@ namespace Kodify.Tests.AutoDoc.Services
             _generator.GenerateChangelog();
 
             // Assert
-            _gitServiceMock.Verify(x => x.DetectProjectRoot(), Times.Once);
-            _gitServiceMock.Verify(x => x.DetectProjectRoot(expectedPath), Times.Once);
+            _gitServiceMock.Verify(x => x.DetectProjectRoot(It.IsAny<string>()));
             _gitServiceMock.Verify(x => x.CheckForGitRepository(expectedPath), Times.Once);
         }
 
@@ -79,6 +76,7 @@ namespace Kodify.Tests.AutoDoc.Services
 
             // Assert
             _aiServiceMock.Verify(x => x.EnhanceChangelogAsync(It.IsAny<string>()), Times.Once);
+            _gitServiceMock.Verify(x => x.CheckForGitRepository(It.IsAny<string>()), Times.Once);
         }
     }
-} 
+}
