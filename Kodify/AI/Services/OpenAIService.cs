@@ -3,7 +3,7 @@ using Kodify.AI.Configuration;
 using Kodify.AI.Constants;
 using OpenAI.Chat;
 using System.Threading.Tasks;
-using Kodify.AutoDoc.Models;
+using Kodify.Repository.Models;
 using System;
 using System.Collections.Generic;
 namespace Kodify.AI.Services;

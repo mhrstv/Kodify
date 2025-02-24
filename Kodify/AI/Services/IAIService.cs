@@ -1,5 +1,5 @@
 using Kodify.AI.Models;
-using Kodify.AutoDoc.Models;
+using Kodify.Repository.Models;
 namespace Kodify.AI.Services;
 
 public interface IAIService
