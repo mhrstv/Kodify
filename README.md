@@ -137,6 +137,4 @@ markdownGenerator.GenerateChangelog(aiService); // This overload uses the AI ser
 - **LibGit2Sharp**
 - **Microsoft.CodeAnalysis (Roslyn)**
 - **OpenAI**
-- **Markdig** 
 - **Newtonsoft.Json**
-- **Humanizer.Core**
