@@ -123,12 +123,8 @@ markdownGenerator.GenerateChangelog(aiService); // This overload uses the AI ser
 
 ---
 
-## Project Resources
+## License
 
-- **Source Code & Repository:**  
-  [GitHub Repository](https://github.com/mhrstv/Kodify)
-
-- **License:**  
   Kodify is released under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ---
